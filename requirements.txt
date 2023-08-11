@@ -1,0 +1,9 @@
+Flask
+flask_mysqldb
+joblib
+requests
+mysql
+python-decouple
+mysql-connector-python 
+pandas
+apscheduler

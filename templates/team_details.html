@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Team Details</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+    
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+    // Delete Team
+    $('.delete-team-button').click(function() {
+        var teamID = $(this).data('team-id');
+        var confirmed = confirm("Are you sure you want to delete the team?");
+
+        if (confirmed) {
+            $.ajax({
+                url: '/delete_team',
+                type: 'POST',
+                data: { team_id: teamID },
+                success: function(response) {
+                    console.log(response);
+                    // Redirect to home page
+                    window.location.href = '/index';
+                },
+                error: function(error) {
+                    console.log(error);
+                }
+            });
+        }
+    });
+
+    // Remove Group from Team
+    $('.delete-group-button').click(function() {
+        var groupID = $(this).data('group-id');
+        var teamID = $(this).data('team-id');
+        var confirmed = confirm("Are you sure you want to delete this group?");
+
+        if (confirmed) {
+            $.ajax({
+                url: '/remove_group',
+                type: 'POST',
+                data: { group_id: groupID, team_id: teamID },
+                success: function(response) {
+                    console.log(response);
+                    // Reload the page after removing the group
+                    location.reload();
+                },
+                error: function(error) {
+                    console.log(error);
+                }
+            });
+        }
+    });
+
+    $('#addGroupBtn').click(function() {
+        var groupName = $('#assignment_group').val();
+        var teamId = '{{ team[0] }}'; 
+
+        if (groupName) {
+            $.ajax({
+                url: '/add_group',
+                type: 'POST',
+                data: { group_name: groupName, team_id: teamId },
+                success: function(response) {
+                    console.log(response);
+                    // Reload the page after adding the group
+                    location.reload();
+                },
+                error: function(error) {
+                    console.log(error);
+                }
+            });
+        }
+    });
+});
+
+    </script>
+</head>
+<body>
+    {% include 'header.html' %}
+    <div class="container">
+        <h1>Team Details</h1>
+
+        <h2>Team Name: {{ team[1] }}</h2>
+        <p>Team Lead Email: {{ team_lead_email }}</p>
+
+        <div class="btn-group">
+            <button class="btn btn-primary">Edit Team</button>
+            <button class="btn btn-danger delete-team-button" data-team-id="{{ team[0] }}">Delete Team</button>
+        </div>
+
+        <h3>Groups:</h3>
+        <ul class="list-group">
+            {% for group in groups %}
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                <a href="{{ url_for('group_details', group_id=group[0], group_name=group[1]) }}">{{ group[1] }}</a>
+                <button class="btn btn-sm btn-danger delete-group-button" data-group-id="{{ group[0] }}" data-team-id="{{ team[0] }}">Delete</button>
+            </li>
+            {% endfor %}
+        </ul>
+        <select class="form-select mt-3" id="assignment_group" name="assignment_group">
+            <option value="">Select a group</option>
+            {% for group in u_groups %}
+            <option value="{{ group[1] }}">{{ group[1] }}</option>
+            {% endfor %}
+        </select>
+        <button class="btn btn-primary mt-3" id="addGroupBtn">Add Group</button>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

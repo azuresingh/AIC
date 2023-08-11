@@ -1,0 +1,270 @@
+/* General Styles */
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.col-lg-6 {
+  flex: 0 0 50%;
+  max-width: 50%;
+}
+
+
+.alert-message {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 9999;
+  width: 300px;
+  padding: 10px;
+  border-radius: 4px;
+}
+
+.alert-info {
+  background-color: #d1ecf1;
+  color: #0c5460;
+}
+
+.alert-success {
+  background-color: #d4edda;
+  color: #155724;
+}
+
+.alert-danger {
+  background-color: #f8d7da;
+  color: #721c24;
+}
+.container {
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+h1 {
+  position: relative;
+  display: inline-block;
+  font-size: 36px;
+  background: linear-gradient(to right, #ff7f00, #f7ff00, #00ff7f, #007fff, #ff00f7, #ff0000);
+  background-size: 600% 100%;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+  -webkit-background-clip: text;
+  background-clip: text;
+  animation: gradient-slide 10s linear infinite;
+}
+
+@keyframes gradient-slide {
+  0% { background-position: 0% 50%; }
+  100% { background-position: 100% 50%; }
+}
+
+/* Navbar Styles */
+.navbar {
+  min-height: 50px;
+  background-color: #333;
+  color: #fff;
+  padding: 0;
+}
+
+.navbar-brand {
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.navbar ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+.navbar ul li {
+  display: inline-block;
+  margin-right: 10px;
+}
+
+.navbar ul li:first-child {
+  margin-left: 0; /* Remove the right margin for the first item */
+}
+
+.navbar ul li a {
+  color: #fff;
+  text-decoration: none;
+}
+
+.navbar-nav {
+  margin-left: auto; /* Align navbar items to the left */
+}
+
+.horizontal-strip {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  background-color: hsla(200, 30%, 96%, 0.961);
+  padding: 10px;
+  border-radius: 5px;
+}
+
+.horizontal-strip .btn {
+  font-size: 16px;
+  padding: 8px 12px;
+  margin-right: 10px;
+}
+
+.horizontal-strip .btn-primary {
+  background-color: hwb(185 28% 32%);
+  border-color: #1d1e1e;
+}
+
+.horizontal-strip .btn-primary:hover {
+  background-color: #0069d9;
+  border-color: #1d1e1e;
+}
+
+/* Buttons Styles */
+.button {
+  display: inline-block;
+  padding: 10px 20px;
+  background-color: #333;
+  color: #fff;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  border-radius: 4px;
+}
+
+.button:hover {
+  background-color: #555;
+}
+
+/* Form Styles */
+.form-group {
+  margin-bottom: 10px;
+}
+
+.form-group label {
+  display: block;
+  font-weight: bold;
+}
+
+.form-group input[type="text"],
+.form-group textarea {
+  width: 100%;
+  padding: 5px;
+  font-size: 14px;
+}
+
+/* Table Styles */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+}
+
+th, td {
+  padding: 0;
+  text-align: center;
+  border-bottom: 1px solid #0a0909;
+}
+
+th {
+  background-color: #f2f2f2;
+}
+
+/* Checkbox Styles */
+input[type="checkbox"] {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  width: 16px;
+  height: 16px;
+  border: 2px solid #ccc;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+}
+
+input[type="checkbox"]:checked {
+  background-color: #2196f3;
+  border-color: #2196f3;
+}
+
+/* Additional Styles */
+.options {
+  margin-bottom: 20px;
+}
+
+.options ul {
+  list-style-type: none;
+  padding-left: 0;
+}
+
+.options li {
+  margin-bottom: 10px;
+}
+
+.options label {
+  margin-left: 5px;
+}
+
+.alert {
+  padding: 10px;
+  background-color: #f44336;
+  color: #111010c6;
+  margin-bottom: 20px;
+}
+
+.team-name {
+  font-size: 28px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.team-lead {
+  font-size: 18px;
+  color: #777;
+  margin-bottom: 20px;
+}
+
+h2 {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #333;
+  text-align: center;
+  text-decoration: none;
+  line-height: 1.5;
+  margin: 10px;
+  padding: 10px;
+  background-color: #f0f0f0;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s ease;
+}
+
+h2:hover {
+  background-color: #eaeaea;
+}
+
+@media screen and (max-width: 768px) {
+  h2 {
+    font-size: 1.8rem;
+  }
+}
+
+.alert {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #fff;
+  border: 1px solid #ccc;
+  padding: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  z-index: 9999;
+}

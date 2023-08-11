@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Create New Team</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- <script src="{{ url_for('static', filename='create_team.js') }}"></script> -->
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="{{ url_for('index') }}">Home</a>
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('inc_mgmt') }}">Incidents</a>
+                </li>
+            </ul>
+            <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('profile') }}">Profile</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('logout') }}">Logout</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div class="container">
+        <h1>Create New Team</h1>
+
+        {% if error %}
+        <div class="alert alert-danger">
+            {{ error }}
+        </div>
+        {% endif %}
+
+        <div class="row">
+            <div class="col-lg-6">
+                <form method="POST" action="{{ url_for('create_team_route') }}">
+                    <div class="form-group">
+                        <label for="team_name">Team Name</label>
+                        <input type="text" class="form-control" id="team_name" name="team_name" autocomplete="off" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="description">Description</label>
+                        <textarea class="form-control" id="description" name="description" rows="3"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="team_lead">Team Lead</label>
+                        <select class="form-control" id="team_lead" name="team_lead" required>
+                            <option value="">Select a team lead</option>
+                            {% for user in users %}
+                            <option value="{{ user[3] }}">{{ user[3] }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="status">Status</label>
+                        <select class="form-control" id="status" name="status">
+                            <option value="active">Active</option>
+                            <option value="inactive">Inactive</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="assignment_group">Assignment Groups</label>
+                        <select class="form-control" id="assignment_group" name="assignment_group" required>
+                            <option value="">Select a group</option>
+                            {% for group in u_groups %}
+                            <option value="{{ group[1] }}">{{ group[1] }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Create Team</button>
+                </form>
+            </div>
+            <div class="col-lg-6">
+                <div id="validation_messages"></div>
+            </div>
+        </div>
+        
+        
+    </div>
+
+    <script>
+        function checkTeamName() {
+            const teamNameInput = document.getElementById('team_name');
+            const validationMessages = document.getElementById('validation_messages');
+            const teamName = teamNameInput.value.trim();
+
+            if (teamName === '') {
+                validationMessages.innerHTML = '<p>Please enter a team name.</p>';
+                return;
+            }
+
+            // Make an AJAX request to check if the team name already exists
+            fetch('/check_team_name', {
+                method: 'POST',
+                headers: {
+                'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ team_name: teamName }),
+            })
+                .then(function (response) {
+                if (response.ok) {
+                    return response.json();
+                } else {
+                    throw new Error('Error checking team name.');
+                }
+                })
+                .then(function (data) {
+                if (data.exists) {
+                    validationMessages.innerHTML = '<p>The team name already exists.</p>';
+                } else {
+                    validationMessages.innerHTML = '';
+                }
+                })
+                .catch(function (error) {
+                console.error('Error:', error);
+                });
+            }
+
+    </script>
+    
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
