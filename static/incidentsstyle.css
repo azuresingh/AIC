@@ -1,0 +1,19 @@
+/* body {
+    padding-top: 60px;
+} */
+
+h1 {
+    margin-bottom: 30px;
+}
+
+.filter-section {
+    margin-bottom: 30px;
+}
+
+.incident-list {
+    margin-top: 30px;
+}
+
+.incident-list th {
+    text-align: center;
+}

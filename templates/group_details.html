@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Team Details</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    {% include 'header.html' %}
+
+    <div class="container">
+        <h1>Group Details</h1>
+        <h2>Group Name: <strong>{{ group[1] }}</strong></h2>
+        
+        <div class="options">
+            <h3>Controls:</h3>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Incident</th>
+                        <th>Model</th>
+                        <th>Tier Approach</th>
+                        <th>Engineer Specialization</th>
+                        <th>Add Recommended Info</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><label><input type="checkbox" checked> Incident</label></td>
+                        <td><input type="checkbox" checked></td>
+                        <td><input type="checkbox" checked></td>
+                        <td><input type="checkbox" checked></td>
+                        <td><input type="checkbox" checked></td>
+                    </tr>
+                    <tr>
+                        <td><label><input type="checkbox" checked> SC_task</label></td>
+                        <td><input type="checkbox" checked></td>
+                        <td><input type="checkbox" checked></td>
+                        <td><input type="checkbox" checked></td>
+                        <td><input type="checkbox" checked></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <h2>Group Members:</h2>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>FTE</th>
+                    <th>Tier</th>
+                    <th>Workload</th>
+                    <th>Teams availability</th>
+                    <th>In BAU</th>
+                    <th>INC Notify</th>
+                    <th>Task Notify</th>
+                    <th>Mail Notify</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in users %}
+                <tr>
+                    <td>{{ user[3] }}</td>
+                    <td>
+                        <input type="text" name="fte" value="{{ user[5] }}" data-user-id="{{ user[0] }}" data-field="fte" onchange="updateUserField(this)"style="width: 50%;">
+                    </td>
+                    <td>
+                        <input type="text" name="tier" value="{{ user[6] }}" data-user-id="{{ user[0] }}" data-field="tier" onchange="updateUserField(this)"style="width: 50%;">
+                    </td>
+                    <td>
+                        <input type="text" name="workload" value="{{ user[13] }}" data-user-id="{{ user[0] }}" data-field="workload" onchange="updateUserField(this)" style="width: 50%;">
+                    </td>
+                    <td><input type="checkbox" name="teams_avail" data-user-id="{{ user[0] }}" data-field="teams_avail" {% if user[12] %}checked{% endif %}></td>
+                    <td><input type="checkbox" name="in_bau" data-user-id="{{ user[0] }}" data-field="in_bau" {% if user[7] %}checked{% endif %}></td>
+                    <td><input type="checkbox" name="inc_notify" data-user-id="{{ user[0] }}" data-field="inc_notify" {% if user[8] %}checked{% endif %}></td>
+                    <td><input type="checkbox" name="task_notify" data-user-id="{{ user[0] }}" data-field="task_notify" {% if user[9] %}checked{% endif %}></td>
+                    <td><input type="checkbox" name="mail_notify" data-user-id="{{ user[0] }}" data-field="mail_notify" {% if user[10] %}checked{% endif %}></td>
+                    <td><button class="btn btn-sm btn-danger float-end" onclick="deleteMember('{{ user[3] }}')">Delete</button></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        
+        <button class="btn btn-primary mt-3" id="addMemberBtn">Add new member</button>
+        
+        <select class="form-control mt-3" id="members" name="members">
+            <option value="">Select a member</option>
+            {% for member in all_users %}
+                <option value="{{ member[0] }}">{{ member[3] }}</option>
+            {% endfor %}
+        </select>
+        
+    </div>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    function deleteMember(username) {
+        const group_name = '{{ group[1] }}';
+        var confirmed = window.confirm("Are you sure you want to delete this member?");
+
+        if (confirmed) {
+            // Send an AJAX request to delete the member
+            $.ajax({
+                url: '/delete_member',
+                method: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({ 'username': username , 'group_name': group_name })
+            })
+            .done(function() {
+                console.log('Member deleted successfully');
+                location.reload();
+            })
+            .fail(function(xhr) {
+                console.error('Failed to delete member:', xhr.responseText);
+            });
+        }
+    }
+document.getElementById('addMemberBtn').addEventListener('click', addNewMember);
+function addNewMember() {
+        const selectElement = document.getElementById('members');
+        const user_sys_id = selectElement.value;
+        const group_sys_id = '{{ group[0] }}';
+        // const group_name = '{{ group[1] }}';
+
+        // Send an AJAX request to call the add-member route
+        $.ajax({
+            url: '/add-member',
+            method: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({ 'user_sys_id': user_sys_id, 'group_sys_id': group_sys_id })
+        })
+        .done(function(response) {
+            console.log('Member added successfully');
+            location.reload(); // Refresh the page after adding the member
+        })
+        .fail(function(xhr) {
+            console.error('Failed to add member:', xhr.responseText);
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+    const checkboxes = document.querySelectorAll('input[type="checkbox"][name="teams_avail"],input[type="checkbox"][name="in_bau"], input[type="checkbox"][name="inc_notify"], input[type="checkbox"][name="task_notify"], input[type="checkbox"][name="mail_notify"]');
+    const textInputs = document.querySelectorAll('input[type="text"][name="workload"],input[type="text"][name="fte"], input[type="text"][name="tier"]');
+
+    checkboxes.forEach(function(checkbox) {
+        checkbox.addEventListener('change', function() {
+            const userId = this.dataset.userId;
+            const field = this.dataset.field;
+            const value = this.checked ? 1 : 0;
+
+            // Send an AJAX request to update the database
+            updateDatabase(userId, field, value);
+        });
+    });
+
+    textInputs.forEach(function(input) {
+        input.addEventListener('change', function() {
+            const userId = this.dataset.userId;
+            const field = this.dataset.field;
+            const value = this.value;
+
+            // Send an AJAX request to update the database
+            updateDatabase(userId, field, value);
+        });
+    });
+
+    function updateDatabase(userId, field, value) {
+        // Make an AJAX request to the server to update the database
+        $.ajax({
+            url: '/update-user',
+            method: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({ userId, field, value })
+        })
+        .done(function() {
+            console.log('Database updated successfully');
+        })
+        .fail(function(xhr) {
+            console.error('Error updating database');
+        });
+    }
+});
+
+</script>
+
+        
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    
+</body>
+</html>

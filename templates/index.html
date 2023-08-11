@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Incident Resolver Teams</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+    
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="{{ url_for('index') }}">Home</a>
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('inc_mgmt') }}">Incidents</a>
+                </li>
+            </ul>
+            <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('profile') }}">Profile</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('logout') }}">Logout</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div id="update-message"></div>
+    
+    <div class="horizontal-strip mb-3">
+
+        <a href="{{ url_for('update_users_list') }}" class="btn btn-primary" onclick="updateUsersList()">Update Users List</a>
+
+        <a href="{{ url_for('update_user_groups_list') }}" class="btn btn-primary" onclick="updateUserGroupsList()">Update Groups List</a>
+    </div>
+    
+    <div class="container mt-4">
+        <h1 class="mb-4">Team Management</h1>
+        <div class="row">
+            <div class="col-lg-10">
+                <div class="text-end mb-3">
+                    <button id="create-group-button" class="btn btn-primary" onclick="showCreateGroupPage()">Create New Team</button>
+                </div>
+
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Sr No</th>
+                            <th>Team Name</th>
+                            <th>Manager</th>
+                            <th>is_active</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for team in teams %}
+                        <tr>
+                            <td>{{ loop.index }}</td>
+                            <td><a href="{{ url_for('team_details', team_id=team[0], team_name=team[1]) }}">{{ team[1] }}</a></td>
+                            <td>{{ team[3] }}</td>
+                            <td>{{ team[4] }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+        function updateUsersList() {
+            // Make an AJAX request to the update_users_list route
+            fetch("/update_users_list")
+                .then(function(response) {
+                if (response.ok) {
+                    location.reload();
+                    return response.text(); 
+                } else {
+                    throw new Error("Error updating users list");
+                }
+                })
+                .then(function(message) {
+                alert(message);
+                })
+                .catch(function(error) {
+                alert(error.message);
+                });
+            }
+        function updateUserGroupsList() {
+            // Make an AJAX request to the update_users_list route
+            fetch("/update_user_groups_list")
+                .then(function(response) {
+                if (response.ok) {
+                    location.reload();
+                    return response.text(); 
+                } else {
+                    throw new Error("Error updating user groups list");
+                }
+                })
+                .then(function(message) {
+                alert(message);
+                })
+                .catch(function(error) {
+                alert(error.message);
+                });
+            }
+        function showCreateGroupPage() {
+            window.location.href = "{{ url_for('create_team_route') }}";
+        }
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

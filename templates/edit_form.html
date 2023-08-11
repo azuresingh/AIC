@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+<head>
+   
+    <title>Edit Incident</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='incidentsstyle.css') }}">
+</head>
+<body>
+    {% include 'header.html' %}
+    
+    <div class="container">
+        <h1>Edit Incident</h1>
+
+        <form id="edit-form">
+            <div class="mb-3">
+                <label for="incident-number" class="form-label">Incident Number</label>
+                <input type="text" class="form-control" id="incident-number" value="{{ incident[0][1] }}" readonly>
+            </div>
+            <div class="mb-3">
+                <label for="short-description" class="form-label">Short Description</label>
+                <input type="text" class="form-control" id="short-description" value="{{ incident[0][2] }}" readonly>
+            </div>
+            <div class="mb-3">
+                <label for="assignment-group" class="form-label">Assignment Group</label>
+                <select class="form-select" id="assignment-group" onchange="handleGroupChange()">
+                    <option value="">Select a group</option>
+                    {% for group in u_groups %}
+                    <option value="{{ group[1] }}">{{ group[1] }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div id="user-table-container" style="display: none;">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Tier</th>
+                            <th>FTE</th>
+                            <th>teams Availability</th>
+                            <th>Workload</th>
+                        </tr>
+                    </thead>
+                    <tbody id="user-table-body">
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="mb-3">
+                <label for="assign-to" class="form-label">Assign To</label>
+                <select class="form-select" id="assign-to">
+                </select>
+            </div>
+            <button type="button" class="btn btn-primary" onclick="saveIncident()">Save</button>
+
+        </form>
+    </div>
+    <script>
+        let selectedGroup = ''; // Variable to store the selected group name
+
+        // Show/hide user table based on assignment group selection
+        const assignmentGroupSelect = document.getElementById('assignment-group');
+        const userTableContainer = document.getElementById('user-table-container');
+        const assignToSelect = document.getElementById('assign-to');
+    
+        function handleGroupChange() {
+            selectedGroup = assignmentGroupSelect.value;
+            if (selectedGroup) {
+                userTableContainer.style.display = 'block';
+                populateUserTable(selectedGroup);
+            } else {
+                userTableContainer.style.display = 'none';
+            }
+        }
+    
+        // Function to populate user table based on selected assignment group
+        function populateUserTable(selectedGroup) {
+            // Make an AJAX request to fetch user data for the selected group
+            $.ajax({
+                url: '/get-users-by-group',
+                method: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({ 'group': selectedGroup }),
+                success: function(response) {
+                    // Handle the response and populate the table rows
+                    const userTableBody = document.getElementById('user-table-body');
+                    userTableBody.innerHTML = ''; // Clear existing rows
+    
+                    for (const user of response.users) {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td>${user.name}</td>
+                            <td>${user.tier}</td>
+                            <td>${user.fte}</td>
+                            <td>${user.teams_avail}</td>
+                            <td>${user.workload}</td>
+                        `;
+                        userTableBody.appendChild(row);
+                    }
+
+                    populateAssignToSelect(response.users);
+                },
+                error: function(xhr) {
+                    console.error('Failed to fetch user data:', xhr.responseText);
+                }
+            });
+        }
+
+        // Function to populate Assign To dropdown list with users from the selected group
+        function populateAssignToSelect(users) {
+            assignToSelect.innerHTML = '';
+            for (const user of users) {
+                const option = document.createElement('option');
+                option.value = user.name;
+                option.textContent = user.name;
+                assignToSelect.appendChild(option);
+            }
+        }
+     
+        function saveIncident() {
+            // Get the form data
+            const assignToInput = document.getElementById('assign-to');
+            const assignToValue = assignToInput.value;
+
+            // Make an AJAX request to save the data in the database
+            $.ajax({
+                url: '/save-incident',
+                method: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({
+                    sys_id: '{{incident[0][0]}}',
+                    incidentNumber: '{{ incident[0][1] }}',
+                    shortDescription: '{{ incident[0][2] }}',
+                    prev_assign_to : '{{ incident[0][9] }}',
+                    assignmentGroup: selectedGroup,
+                    assignTo: assignToValue
+                }),
+                success: function(response) {
+                    console.log(response.ok);
+                    
+                    window.location.href = '/inc_mgmt';
+                },
+                error: function(xhr) {
+                    console.error('Failed to save the incident:', xhr.responseText);
+                }
+            });
+        }
+
+        const editForm = document.getElementById('edit-form');
+        editForm.addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent the default form submission
+            saveIncident();
+        });
+    </script>
+    
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

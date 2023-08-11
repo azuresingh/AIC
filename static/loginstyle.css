@@ -1,0 +1,67 @@
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    font-family: Arial, sans-serif;
+    background-color: #f3f3f3;
+}
+
+.login-container {
+    background-color: #ffffff;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    padding: 40px;
+    width: 400px;
+    max-width: 100%;
+}
+
+.login-container h2 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.login-container form .form-control {
+    margin-bottom: 20px;
+}
+
+.login-container form .form-control label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+.login-container form .form-control input {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    border-radius: 3px;
+    border: 1px solid #ccc;
+}
+
+.login-container form .form-control input:focus {
+    outline: none;
+    border-color: #6acce8;
+}
+
+.login-container form .form-control .btn {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    color: #ffffff;
+    background-color: #6acce8;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.login-container form .form-control .btn:hover {
+    background-color: #58b7db;
+}
+
+.login-container form .form-control .signup-link {
+    display: block;
+    text-align: center;
+    margin-top: 20px;
+    color: #6acce8;
+}
