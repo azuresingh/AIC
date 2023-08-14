@@ -2,7 +2,7 @@ import MySQLdb
 from flask_mysqldb import MySQL
 import datetime
 import mysql.connector
-from config import *
+from myconfig import *
 from app import mysql
 
 def is_team_name_exists(team_name):
