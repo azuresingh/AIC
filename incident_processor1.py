@@ -11,7 +11,7 @@ from topsis3 import *
 from inc_db_fun import *
 from servicenow_functions import *
 from configparser import ConfigParser
-from config.config import *
+from config import *
 from concurrent.futures import ThreadPoolExecutor
 
 INSTANCE_URL = SERVICENOW_INSTANCE
