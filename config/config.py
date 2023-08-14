@@ -4,7 +4,7 @@
 from decouple import config
 
 # config_path = r'C:\Users\JoshiP02\Downloads\AIC_db_snow_ui_model_integrated_250723\AICMain250723readyfordemo\.env'
-config_path = r'.\.env'
+#config_path = r'.\.env'
 
 SECRET_KEY = config('SECRET_KEY')
 
