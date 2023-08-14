@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 import datetime
 import mysql.connector
-from config import *
+from myconfig import *
 
 conn = mysql.connector.connect(
     host=MYSQL_HOST,
