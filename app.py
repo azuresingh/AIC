@@ -8,7 +8,7 @@ import threading
 from servicenow_functions import *
 from database_functions import *
 import mysql.connector
-from config import *
+from myconfig import *
 from incident_processor1 import IncidentProcessor
 from apscheduler.schedulers.background import BackgroundScheduler 
 
