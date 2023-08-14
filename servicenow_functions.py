@@ -1,5 +1,5 @@
 import requests
-from config import *
+from myconfig import *
 
 INSTANCE_URL = SERVICENOW_INSTANCE
 USERNAME = SERVICENOW_USERNAME
