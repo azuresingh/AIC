@@ -3,9 +3,10 @@ from flask_mysqldb import MySQL
 import datetime
 import mysql.connector
 from myconfig import *
-from app import mysql
+#from app import mysql
 
 def is_team_name_exists(team_name):
+    from app import mysql
     cursor = mysql.connection.cursor()    
     query = "SELECT COUNT(*) FROM teams WHERE team_name = %s"
     cursor.execute(query, (team_name,))
@@ -31,6 +32,7 @@ def insert_users(users):
     cur.close()
 
 def create_team(team_name, description, team_lead, status, assignment_groups):
+    from app import mysql
     try:
         conn = mysql.connection
         cursor = conn.cursor()
@@ -57,6 +59,7 @@ def create_team(team_name, description, team_lead, status, assignment_groups):
 
 
 def update_incident(sys_id, assignment_group, assigned_to):
+    from app import mysql
     query = '''
         UPDATE incidents
         SET assignment_group = %s,
@@ -78,6 +81,7 @@ def update_incident(sys_id, assignment_group, assigned_to):
 
     
 def get_incidents():
+    from app import mysql
     cur = mysql.connection.cursor()
     cur.execute("SELECT * FROM incidents ORDER BY incident_number DESC")
     incidents = cur.fetchall()
@@ -85,6 +89,7 @@ def get_incidents():
     return incidents
 
 def get_incident_detail(sys_id):
+    from app import mysql
     cur = mysql.connection.cursor()
     cur.execute("SELECT * FROM incidents WHERE sys_id = %s", (sys_id,))
     incident = cur.fetchall()
@@ -93,12 +98,14 @@ def get_incident_detail(sys_id):
 
 
 def get_teams():
+    from app import mysql
     cur = mysql.connection.cursor()
     cur.execute("SELECT * FROM teams")
     teams = cur.fetchall()
     cur.close()
     return teams
 def fetch_users():
+    from app import mysql
     cur = mysql.connection.cursor()
     cur.execute("SELECT * FROM users ORDER BY name ASC")
     users = cur.fetchall()
@@ -106,12 +113,14 @@ def fetch_users():
     return users
 
 def get_groups():
+    from app import mysql
     cur = mysql.connection.cursor()
     cur.execute("SELECT * FROM assignment_group ORDER BY group_name ASC")
     u_groups = cur.fetchall()
     cur.close()
     return u_groups
 def get_users_for_this_group(group_id):
+    from app import mysql
     cur = mysql.connection.cursor()
     cur.execute("SELECT * FROM users where group_id= group_id")
     members = cur.fetchall()
@@ -119,6 +128,7 @@ def get_users_for_this_group(group_id):
     return members
 
 def get_team_details(team_id):
+    from app import mysql
     cur = mysql.connection.cursor()
     cur.execute("SELECT * FROM teams WHERE id = %s", (team_id,))
     team = cur.fetchone()
@@ -128,6 +138,7 @@ def get_team_details(team_id):
     return team, groups
 
 def get_group_details(group_id, group_name):
+    from app import mysql
     cur = mysql.connection.cursor()
     cur.execute("SELECT * FROM assignment_group WHERE sys_id = %s", (group_id,))
     group = cur.fetchone()
@@ -138,6 +149,7 @@ def get_group_details(group_id, group_name):
 
 
 def create_user(group_id, username, password):
+    from app import mysql
     cur = mysql.connection.cursor()
     sql = "INSERT INTO users (group_id, username, password) VALUES (%s, %s, %s)"
     values = (group_id, username, password)
@@ -146,6 +158,7 @@ def create_user(group_id, username, password):
     cur.close()
 
 def delete_user(user_id):
+    from app import mysql
     cur = mysql.connection.cursor()
     sql = "DELETE FROM users WHERE id = %s"
     values = (user_id,)
@@ -154,6 +167,7 @@ def delete_user(user_id):
     cur.close()
 
 def insert_group_member(sys_id, user_name, group_name):
+    from app import mysql
     try:
         conn = mysql.connection
         cursor = conn.cursor()
@@ -170,6 +184,7 @@ def insert_group_member(sys_id, user_name, group_name):
         return f'Failed to insert group member: {e}'
     
 def insert_user_groups_from_service_now(user_groups):
+    from app import mysql
     cur = mysql.connection.cursor()
     for u_group in user_groups:
         active_value = 1 if u_group.get('active') == 'true' else 0
@@ -185,6 +200,7 @@ def insert_user_groups_from_service_now(user_groups):
     cur.close()
 
 def insert_group_members_from_service_now(group_members):
+    from app import mysql
     cur = mysql.connection.cursor()
     for group_member in group_members:
         sys_id = group_member.get('sys_id', '')
@@ -202,6 +218,7 @@ def insert_group_members_from_service_now(group_members):
     cur.close()
 
 def get_users_by_group(group_name):
+    from app import mysql
     try:
         conn = mysql.connection
         cursor = conn.cursor()
@@ -237,6 +254,7 @@ def get_users_by_group(group_name):
         return None
 
 def insert_incident_into_database(self, sys_id, number, short_desc, assignment_group, assigned_to, urgency,A_group_score):
+    from app import mysql
     conn = mysql.connection
     cursor = conn.cursor()
     query = "INSERT INTO incidents (sys_id, incident_number, description, assignment_group, assigned_to, urgency, A_group_score) VALUES (%s, %s, %s, %s, %s, %s, %s)"
