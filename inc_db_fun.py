@@ -2,7 +2,7 @@ import MySQLdb
 from flask_mysqldb import MySQL
 import datetime
 import mysql.connector
-from config.config import *
+from myconfig import *
 mysql = mysql.connector.connect(
         host=MYSQL_HOST,
         user=MYSQL_USERNAME,
