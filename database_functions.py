@@ -17,6 +17,7 @@ def is_team_name_exists(team_name):
 
 
 def insert_users(users):
+    from app import mysql
     cur = mysql.connection.cursor()
     for user in users:
         active_value = 1 if user.get('active') == 'true' else 0
