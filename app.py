@@ -304,4 +304,4 @@ if __name__ == '__main__':
     scheduler = BackgroundScheduler(max_instances=1)
     scheduler.add_job(call_process_incident, 'interval', seconds=20)  # Adjust the interval as needed
     scheduler.start()
-    app.run()
+    app.run(debug=True)
