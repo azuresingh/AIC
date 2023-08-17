@@ -60,4 +60,4 @@ jobs:
         with:
           app-name: 'aicmanagement'
           slot-name: 'Production'
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_627A130FBA92496FA00938FE1C846F08 }}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_6B5E1C1BA11E4BEE9C6D9567E481055D }}
